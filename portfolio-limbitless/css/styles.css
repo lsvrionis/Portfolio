@@ -8,8 +8,8 @@ body {
     background-position: center;
     color: #333;
     display: flex;
-    flex-direction: column; /* Stack items vertically */
-    min-height: 100vh; /* Ensure the body takes up at least the full height of the screen */
+    flex-direction: column; 
+    min-height: 100vh; 
 }
 
 main {
@@ -21,45 +21,42 @@ h1, h2 {
     font-family: 'Courier New', monospace;
 }
 
-/* Navbar Container */
 .navbar {
     display: flex;
-    justify-content: space-between; /* Align items to the left and right */
-    align-items: center; /* Vertically center items */
+    justify-content: space-between; 
+    align-items: center; 
     padding: 0.5rem 2rem;
-    background: #fff; /* White background */
-    border: 1px solid black; /* Thin black border */
-    border-radius: 5px; /* Rounded corners */
-    font-family: 'Overpass Mono', monospace; /* Use Overpass Mono font */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    background: #fff; 
+    border: 1px solid black; 
+    border-radius: 5px; 
+    font-family: 'Overpass Mono', monospace; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
     width: 80%;
     height: 30px;
     margin: 20px auto 80px;
+    font-size: 20px;
 }
 
 .navbar a {
     margin: 0 15px;
 }
 
-/* Navbar Left (Name) */
+
 .navbar-left {
-    font-weight: bold; /* Bold text for the name */
+    font-weight: bold; 
 }
 
-/* Navbar Right (Links) */
 .navbar-right a {
-    margin-left: 1rem; /* Spacing between links */
-    text-decoration: none; /* Remove underline */
-    color: black; /* Black text color */
-    font-weight: normal; /* Regular font weight */
+    margin-left: 1rem; 
+    text-decoration: none; 
+    color: black; 
+    font-weight: normal; 
 }
 
 .navbar-right a:hover {
-    text-decoration: underline; /* Add underline on hover */
+    text-decoration: underline;
 }
 
-
-/* Intro Section */
 
 .intro {
     text-align: center;
@@ -82,7 +79,6 @@ h1, h2 {
     color: #555;
 }
 
-/* Experience Section */
 .experience {
     display: flex;
     flex-direction: column;
@@ -100,7 +96,9 @@ h1, h2 {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.5rem;
+    font-size: 20px;
+    align-items: flex-start;
 }
 
 .experience-card h2 {
@@ -108,6 +106,7 @@ h1, h2 {
     margin: 0;
     color: #010B0B;
     font-family: 'Manjari', sans-serif;
+    flex: 1;
 }
 
 .experience-card a {
@@ -120,23 +119,23 @@ h1, h2 {
 }
 
 .experience-card img {
-    width: 100px;
+    width: 200px;
     height: auto;
-    margin: 0 auto;
+    align-self: flex-end;
 }
 
 .experience-card p {
-    font-size: 1rem;
+    font-size: 20px;
     line-height: 1.5;
     color: #010B0B;
+    margin: 0;
+    flex: 2;
 }
 
 .highlight {
     color: #6882B2;
 }
 
-
-/* About Section */
 .about-section {
     display: flex;
     justify-content: center;
@@ -169,7 +168,6 @@ h1, h2 {
     margin-left: -200px;
 }
 
-/* Skills Section */
 .skills {
     text-align: center;
     margin: 2rem 0;
@@ -197,12 +195,12 @@ h1, h2 {
 
 }
 
-/* Footer */
 footer {
     background: #fff;
     padding: 1rem;
     text-align: right;
     font-family: 'Courier New', monospace;
+    font-size: 19px;
 }
 
 footer .contact-links a {
