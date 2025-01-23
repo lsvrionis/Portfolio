@@ -6,7 +6,7 @@ body {
     background-image: url('../images/paper background.png');
     background-size: cover;
     background-position: center;
-    color: #333;
+    color: black;
     display: flex;
     flex-direction: column; 
     min-height: 100vh; 
@@ -189,11 +189,14 @@ a.experience-card {
     margin: 0 auto;
     line-height: 30px;
     margin-bottom: 5%;
+    color: #000000;
 }
 
 .skills {
     text-align: center;
     margin: 2rem 0;
+    color: #000000;
+    
 }
 
 .skills h2 {
@@ -205,22 +208,73 @@ a.experience-card {
     width: 80%;
     text-align: center;
     margin: 1rem auto;
+    font-size: 1.5rem;
 
+}
+
+.skills-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 0 auto;
+    width: 80%;
+}
+
+.skills-column {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+    font-family: 'Manjari', sans-serif;
 }
 
 .skills-grid {
     display: grid;
-    grid-template-rows: repeat(2, 1fr);
-    gap: 1rem;
-    margin-top: 1rem;
-    padding: 0 2rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
     font-family: 'Manjari', sans-serif;
-    font-size: 21px;
+    color: #000000;
+    font-size: 1.5rem;
+    justify-items: center;
+    margin: 1rem auto;
+    width: 100%;
+}
+
+.skill-item {
+    font-size: 3rem;
+    color: #555;
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+    position: relative;
+}
+
+.skill-item:hover {
+    color: #0077b5;
+    transform: scale(1.2);
+}
+
+.skill-item::after {
+    content: attr(title); 
+    position: absolute;
+    bottom: -2rem; 
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333; 
+    color: #fff; 
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    white-space: nowrap; 
+}
+
+.skill-item:hover::after {
+    opacity: 1; 
 }
 
 .skills-grid h2 {
     grid-column: 1 / -1;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     margin-bottom: 10px;
     color: #B0BFDA;
   }
@@ -257,16 +311,28 @@ a.experience-card {
     color: #B0BFDA;
   }
 
+.contact {
+    text-align: center;
+    margin: 2rem auto;
+  }
+
+.contact-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+
 .contact-icons a {
-    margin: 0 10px;
-    font-size: 2rem;
+    font-size: 2.5rem;
     color: #000000;
     text-decoration: none;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, color 0.2s ease;
   }
 
   .contact-icons a:hover {
     transform: scale(1.2);
+    color: #2D4571;
   }
 
 
@@ -289,7 +355,7 @@ a.experience-card {
     top: -25px;
     left: 50%;
     transform: translateX(-50%) scale(5);
-    width: 50px;
+    width: 200px;
     height: 20px;
     background: url('../images/binder clip.png') no-repeat center/contain;
     background-size: contain;
@@ -361,16 +427,6 @@ a.experience-card {
     transform: scale(1);
   }
 
-  .typing {
-    display: inline-block;
-    font-family: 'Overpass Mono', monospace;
-    font-size: 2rem;
-    white-space: nowrap;
-    overflow: hidden;
-    width: 0;
-    animation: typing 4s steps(30) 1s forwards, blink 0.75s step-end infinite;
-}
-
 
 .projects {
     text-align: center;
@@ -429,8 +485,18 @@ a.experience-card {
 
 .project-logo {
     background-color: white;
-    padding: 4rem;
+    padding: 2rem;
     border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 120px;
+}
+
+.project-logo img {
+    max-width: 100%;
+    max-height: 150%;
+    object-fit: contain;
 }
 
 .project-card:hover {
