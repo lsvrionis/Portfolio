@@ -79,6 +79,30 @@ h1, h2 {
     color: #555;
 }
 
+.typing-text {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 0;
+    animation: typing 2s steps(10, end) forwards;
+}
+
+@keyframes typing {
+    from { width: 0; }
+    to { width: 40%; }
+}
+
+.typing-text::after {
+    content: "|";
+    display: inline-block;
+    animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+    from, to { opacity: 1; }
+    50% { opacity: 0; }
+}
+
 .experience {
     display: flex;
     flex-direction: column;
@@ -176,6 +200,39 @@ a.experience-card {
     justify-content: center;
     align-items: center;
     border-radius: 10px;
+}
+
+
+.selfie-container {
+    width: 400px;
+    height: 400px;
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    background-size: 100% 100%;
+}
+
+
+.selfie {
+    width: 60%;
+    height: auto;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.lace-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../images/lace border.png') center/cover no-repeat;
+    transform: rotate(90deg);
+    z-index: 2;
+    pointer-events: none;
+
 }
 
 .blurb {
@@ -314,6 +371,7 @@ a.experience-card {
 .contact {
     text-align: center;
     margin: 2rem auto;
+    margin-top: -5rem;
   }
 
 .contact-icons {
