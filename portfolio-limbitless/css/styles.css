@@ -12,6 +12,26 @@ body {
     min-height: 100vh; 
 }
 
+/* mobile menu */
+.hamburger-menu {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .hamburger-menu{
+        display: block; /* show on mobile */
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+}
+
 main {
     flex: 1;
 }
@@ -21,11 +41,22 @@ h1, h2 {
     font-family: 'Courier New', monospace;
 }
 
+@media (max-width: 768px) {
+    h1{
+        font-size: 2rem;
+    }
+
+    img {
+        max-width: 100%; 
+        height: auto; 
+    }
+}
+
 .navbar {
     display: flex;
     justify-content: space-between; 
     align-items: center; 
-    padding: 0.5rem 2rem;
+    padding: 0.5rem 5%;
     background: #fff; 
     border: 1px solid black; 
     border-radius: 5px; 
@@ -34,11 +65,11 @@ h1, h2 {
     width: 80%;
     height: 30px;
     margin: 20px auto 80px;
-    font-size: 20px;
+    font-size: 1.3rem;
 }
 
 .navbar a {
-    margin: 0 15px;
+    margin: 0 1rem;
 }
 
 
@@ -57,7 +88,7 @@ h1, h2 {
     text-decoration: underline;
 }
 
-
+/* intro section on home */
 .intro {
     text-align: center;
     margin: 0.5rem auto;
@@ -67,7 +98,7 @@ h1, h2 {
 .intro h1 {
     background: #fff;
     display: block;
-    padding: 0.5rem 2rem;
+    padding: 0.5rem 5%;
     width: 80%;
     text-align: center;
     margin: 1rem auto;
@@ -79,6 +110,7 @@ h1, h2 {
     color: #555;
 }
 
+/* typing animation on home */
 .typing-text {
     display: inline-block;
     overflow: hidden;
@@ -103,6 +135,7 @@ h1, h2 {
     50% { opacity: 0; }
 }
 
+/* experience page */
 .experience {
     display: flex;
     flex-direction: column;
@@ -122,9 +155,21 @@ h1, h2 {
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    font-size: 20px;
+    font-size: 1.3rem;
     margin: 2% 0;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* for small screens */
+@media (max-width: 768px) {
+    .experience-card{
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .experience-logo img {
+        max-width: 100px;
+    }
 }
 
 a.experience-card {
@@ -148,7 +193,7 @@ a.experience-card {
 }
 
 .experience-logo img {
-    max-width: 230px;
+    max-width: 65%;
     height: auto;
     position: static;
 }
@@ -171,13 +216,14 @@ a.experience-card {
     color: #6882B2;
 }
 
+/* about page */
 .about-section {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 2rem;
     margin: 2rem 0;
-    padding: 0 2rem;
+    padding: 0 5%;
 }
 
 .blurb {
@@ -195,17 +241,17 @@ a.experience-card {
     margin-top: 2%;
 }
 
+/* skills section */
 .skills {
     text-align: center;
     margin: 2rem 0;
     color: #000000;
-    
 }
 
 .skills h2 {
     background: #fff;
     display: inline-block;
-    padding: 0.5rem 2rem;
+    padding: 0.5rem 5%;
     border: 1px solid black;
     border-radius: 5px;
     width: 80%;
@@ -314,6 +360,7 @@ a.experience-card {
     color: #B0BFDA;
   }
 
+/* contact me section */
 .contact {
     text-align: center;
     margin: 2rem auto;
@@ -369,7 +416,7 @@ a.experience-card {
     background: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: inline-block;
-    padding: 0.5rem 2rem;
+    padding: 0.5rem 5%;
     width: 40%;
     text-align: center;
     margin: 1rem auto;
@@ -508,12 +555,13 @@ a.experience-card {
     box-shadow: 0 30px 50px rgba(0, 0, 0, 0.2);
 }
 
+/* footer */
 footer {
     background: #fff;
     padding: 1rem;
     text-align: right;
     font-family: 'Courier New', monospace;
-    font-size: 19px;
+    font-size: 1.3rem;
 }
 
 footer .contact-links a {
