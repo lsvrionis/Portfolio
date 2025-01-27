@@ -23,13 +23,14 @@ body {
     font-family: 'Overpass Mono', monospace; 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
     width: 80%;
-    height: 30px;
     margin: 20px auto 80px;
     font-size: 1.3rem;
 }
 
 .navbar a {
     margin: 0 1rem;
+    text-decoration: none;
+    color: black;
 }
 
 
@@ -94,13 +95,13 @@ h1, h2 {
 }
 
 @media (max-width: 768px) {
-    h1{
+    h1 {
         font-size: 2rem;
     }
 
     img {
-        max-width: 100%; 
-        height: auto; 
+        max-width: 100%;
+        height: auto;
     }
 }
 
@@ -222,32 +223,32 @@ h1, h2 {
 
 .projects h1 {
     background: #fff;
-    display: block;
-    padding: 0.5rem 2rem;
+    display: inline-block;
+    padding: 0.5rem 5%;
     border: 1px solid black;
+    border-radius: 5px;
     width: 80%;
     text-align: center;
-    margin: 1rem auto;
-    margin-top: 80px;
-    border-radius: 5px;
+    margin: 4rem auto;
+    font-size: 1.5rem;
 }
 
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
+    gap: 5rem;
     width: 80%;
-    margin: 0 10rem;
+    margin: 0rem 20rem;
 }
 
 .project-card {
     background-color: #B0BFDA;
     padding: 1rem;
     border-radius: 10px;
-    height: 75%;
+    height: 76%;
     width: 350px;
     position: relative;
-    left: 15%;
+    left: -20%;
     margin-bottom: 10%;
     margin-top: 5%;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -312,6 +313,49 @@ h1, h2 {
         margin-top: 1%;
         padding: 1rem;
     }
+}
+
+
+@media (max-width: 1300px){
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin: 1rem auto;
+    }
+
+    .project-card {
+        width: 80%;
+        height: 90%;
+        left: 0;
+        margin: 0 auto;
+        margin-bottom: 2rem;
+        padding: -1rem;
+    }
+
+    .project-blurb {
+        width: 90%;
+        margin-left: 2%;
+        margin-top: 1%;
+        padding: 1rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .projects-grid {
+        width: 90%; /* Center and resize the grid */
+        grid-template-columns: repeat(2, 1fr); /* Add one more column for wider screens */
+        gap: 2.5rem; /* Increase spacing for better visual hierarchy */
+    }
+
+    .project-card {
+        padding: 2rem; /* Add more padding to cards */
+        font-size: 1.2rem; /* Adjust font size */
+    }
+
+    .project h1 {
+        max-width: 80%;
+    }
+
 }
 
 /* intro section on home */
@@ -721,3 +765,5 @@ footer .contact-links a::after {
 footer .contact-links a:hover::after {
     opacity: 1;
 }
+
+

@@ -18,13 +18,13 @@
         <div class="hamburger-menu" onclick="toggleMenu()">☰</div>
         <div class="navbar-right">
             <button class="hamburger-menu">☰</button>
-            <a href="home.html">Home</a>
+            <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="experience.html">Experience</a>
         </div>
     </nav>
 
-    <main>
+    <body>
         <section class="home-header">
             <h1 class="typing">Hello! I'm Lily <span class="typing-text">／(^ x ^)＼</span></h1>
             <div class="home-headshot"></div>
@@ -36,9 +36,8 @@
             </div>
         </section>
 
-
         <section class="projects">
-            <h1><strong>Projects ↓↓↓</strong></h1>
+                <h1>Projects ↓↓↓</h1>
             <div class="projects-grid">
                 
                 <a href="https://www.capistranodistillery.com/" class="project-card">
@@ -88,7 +87,27 @@
                 </a>
             </div>
         </section>
-
+        
+        <script type="module">
+            // Import the functions you need from the SDKs you need
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
+          
+            // Your web app's Firebase configuration
+            const firebaseConfig = {
+              apiKey: "AIzaSyDoltt9GUI688cxcZRUEVlVxKy4_eS9hnE",
+              authDomain: "lsvrionis-portfolio.firebaseapp.com",
+              projectId: "lsvrionis-portfolio",
+              storageBucket: "lsvrionis-portfolio.firebasestorage.app",
+              messagingSenderId: "98571530216",
+              appId: "1:98571530216:web:43a357c22c5fd3faeebe5d"
+            };
+          
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+          </script>
+    </body>
         </main>
 
 
