@@ -4,8 +4,4 @@ document.addEventListener("DOMContentLoaded", function() {
     }, 1000); // 1 second delay
 });
 
-function toggleMenu() {
-    const navbarRight = document.querySelector('.navbar-right');
-    navbarRight.classList.toggle('active');
-}
 <script src="https://kit.fontawesome.com/efb49abce0.js" crossorigin="anonymous"></script>
