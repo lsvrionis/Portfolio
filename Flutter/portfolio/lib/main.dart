@@ -52,7 +52,6 @@ class _FirstSectionState extends State<FirstSection>
     "portfolio.",
     "journey.",
     "vision.",
-    "energy.",
     "future.",
   ];
 
@@ -224,7 +223,68 @@ class _FirstSectionState extends State<FirstSection>
           ),
 
           const Spacer(),
+          const BouncingArrows(),
         ],
+      ),
+    );
+  }
+}
+
+class BouncingArrows extends StatefulWidget {
+  const BouncingArrows({super.key});
+
+  @override
+  State<BouncingArrows> createState() => _BouncingArrowsState();
+}
+
+class _BouncingArrowsState extends State<BouncingArrows>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _bounce;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    )..repeat(reverse: true);
+
+    _bounce = Tween<double>(begin: 0, end: 8).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 32),
+      child: AnimatedBuilder(
+        animation: _bounce,
+        builder: (context, child) {
+          return Transform.translate(
+            offset: Offset(0, _bounce.value),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(Icons.keyboard_arrow_down,
+                    color: Color(0xFF5E7CFE), size: 45),
+                SizedBox(width: 50),
+                Icon(Icons.keyboard_arrow_down,
+                    color: Color(0xFF5E7CFE), size: 45),
+                SizedBox(width: 50),
+                Icon(Icons.keyboard_arrow_down,
+                    color: Color(0xFF5E7CFE), size: 45),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
