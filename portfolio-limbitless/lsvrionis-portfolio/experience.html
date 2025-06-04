@@ -7,14 +7,14 @@
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Overpass+Mono&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&display=swap" rel="stylesheet">
-
+    <title>Work Experience</title>
 </head>
 <body class="experience-page">
     <nav class="navbar">
         <div class="navbar-left">
             Lily Vrionis
         </div>
-        <div class="hamburger-menu" onclick="toggleMenu()">☰</div>
+        <div class="hamburger-menu">☰</div>        
         <div class="navbar-right">
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
@@ -31,7 +31,7 @@
         <section class="experience">
             <a href="https://limbitless-solutions.org/" class="experience-card">
                 <div class="experience-text">
-                <h3>UX/UI Design Intern @ <span class="highlight">Limbitless Solutions INC.</span></h3>
+                <h2>UX/UI Design Intern @ <span class="highlight">Limbitless Solutions INC.</span></h2>
                 <p>Current intern at Limbitless Solutions, a nonprofit organization at the 
                     University of Central Florida that creates personalized 3D-printed prosthetic arms
                     for children.</p>
@@ -46,7 +46,7 @@
     
             <a href="https://osi.ucf.edu/" class="experience-card">
                 <div class="experience-text">
-                <h3>Web Designer @ <span class="highlight">University of Central Florida</span></h3>
+                <h2>Web Designer @ <span class="highlight">University of Central Florida</span></h2>
                 <p>Currently on the web design team at the Office of Student Involvement (OSI) at the University of Central Florida.</p>
                 <p>I design and maintain the OSI website for UCF events and campaigns, as well as a variety of other UCF-affiliated websites, using <strong>HTML, CSS, Bootstrap, and WordPress</strong> to ensure responsive and accessible user interfaces.</p>
                 </div>
@@ -58,8 +58,8 @@
     
             <a href="https://www.instagram.com/ucfacm/" class="experience-card">
                 <div class="experience-text">
-                <h3>Outreach Director @ <span class="highlight">Association of Computing Machinery</span></h3>
-                <p>Current Outreach Director at UCF’s chapter of ACM. I faciltate connections with companies that have a focus on technology and invite them to sponsor ACM and participate as guest speakers.</p>              
+                <h2>Outreach Director @ <span class="highlight">Association of Computing Machinery</span></h2>
+                <p>Current Outreach Director at UCF’s chapter of ACM. I facilitate connections with companies that have a focus on technology and invite them to sponsor ACM and participate as guest speakers.</p>              
                 <p>Organized and led a <strong>full-stack development workshop series</strong>, introducing beginners to front-end and back-end development tools, frameworks, design applications, and more.</p>
                 </div>
                 <div class="experience-logo">
@@ -74,9 +74,9 @@
     <footer>
         <p><strong>Thanks for visiting!</strong> Let’s get in touch :)</p>
         <div class="contact-links">
-            <a href="mailto:lsvrionis@gmail.com">Email</a>
-            <a href="https://www.linkedin.com/in/lily-vrionis/">LinkedIn</a>
-            <a href="https://github.com/trogoodkoe">GitHub</a>
+            <a href="mailto:lsvrionis@gmail.com" alt="Link to send Lily an email">Email</a>
+            <a href="https://www.linkedin.com/in/lily-vrionis/" alt="Link to Lily's LinkedIn profile">LinkedIn</a>
+            <a href="https://github.com/trogoodkoe" alt="Link to Lily's GitHub account">GitHub</a>
         </div>
     </footer>
 
@@ -116,5 +116,20 @@
   const app = initializeApp(firebaseConfig);
 
 </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const hamburger = document.querySelector(".hamburger-menu"); 
+            const navMenu = document.querySelector(".navbar-right"); 
+
+            if (hamburger && navMenu) { 
+                hamburger.addEventListener("click", function () {
+                    navMenu.classList.toggle("active"); 
+                });
+            } else {
+                console.error("Hamburger menu or navbar not found!");
+            }
+        });
+    </script>
+
 </body>
 </html>

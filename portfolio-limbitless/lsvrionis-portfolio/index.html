@@ -6,15 +6,16 @@
     <title>Home</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Overpass+Mono&display=swap" rel="stylesheet">
+    <title>Home</title>
     <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
-<body class="home-page">
+<body class="home-page" role="main">
     <nav class="navbar">
         <div class="navbar-left">
             Lily Vrionis
         </div>
-        <div class="hamburger-menu" onclick="toggleMenu()">☰</div>
+        <div class="hamburger-menu">☰</div>
         <div class="navbar-right">
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
@@ -25,7 +26,7 @@
     <body>
         <section class="home-header">
             <h1 class="typing">Hello! I'm Lily <span class="typing-text">／(^ x ^)＼</span></h1>
-            <div class="home-headshot"></div>
+            <div class="home-headshot" role="img" alt="Lily's headshot photo"></div>
             <p>I’m an aspiring <strong>UI/UX designer </strong>and <strong>front-end developer.</strong><br/><br/>
             I aim to craft products that are visually appealing, but also <u>impactful</u> and <u>accessible</u>.</p>
             <div class="buttons">
@@ -38,7 +39,7 @@
                 <h1>Projects ↓↓↓</h1>
             <div class="projects-grid">
                 
-                <a href="https://www.capistranodistillery.com/" class="project-card">
+                <a href="https://www.capistranodistillery.com/" class="project-card" alt="Link to Capistrano Distillery's website">
                     <div class="project-logo">
                        <img src="images/capistrano.png" alt="Capistrano Logo">
                     </div>
@@ -49,7 +50,7 @@
                     and implementing key features like appointment booking.
                     </div>
                 </a>
-                <a href="https://devpost.com/software/mend-qz625i" class="project-card">
+                <a href="https://devpost.com/software/mend-qz625i" class="project-card" alt="Link to the Devpost Page for Mend">
                     <div class="project-logo">
                         <img src="images/mend.png" alt="Mend Logo">
                     </div>
@@ -61,7 +62,7 @@
                         helps users understand their issues and provides them with a plan to overcome them.
                     </div>
                 </a>
-                <a href="https://devpost.com/software/blot-83kaxi" class="project-card">
+                <a href="https://devpost.com/software/blot-83kaxi" class="project-card" alt="Link to the Devpost Page for BLOT">
                     <div class="project-logo">
                         <img src="images/blot.png" alt="BLOT Logo">
                     </div>
@@ -72,7 +73,7 @@
                         surrounding women's shelters across the country.
                     </div>
                 </a>
-                <a href="https://osi.ucf.edu/knights-vote/" class="project-card">
+                <a href="https://osi.ucf.edu/knights-vote/" class="project-card" alt="Link to the University of Central Florida's Knights Vote website">
                     <div class="project-logo">
                         <img src="images/knights-vote.png" alt="Knights Vote Logo">
                     </div>
@@ -112,8 +113,26 @@
         <footer>
             <p><strong>Thanks for visiting!</strong> Let’s get in touch :)</p>
             <div class="contact-links">
-                <a href="mailto:lsvrionis@gmail.com">Email</a>
-                <a href="https://www.linkedin.com/in/lily-vrionis/">LinkedIn</a>
-                <a href="https://github.com/trogoodkoe">GitHub</a>
+                <a href="mailto:lsvrionis@gmail.com" alt="Link to send Lily an email">Email</a>
+            <a href="https://www.linkedin.com/in/lily-vrionis/" alt="Link to Lily's LinkedIn profile">LinkedIn</a>
+            <a href="https://github.com/trogoodkoe" alt="Link to Lily's GitHub account">GitHub</a>
             </div>
         </footer>
+
+        <script src="js/script.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const hamburger = document.querySelector(".hamburger-menu"); // Select the hamburger menu icon
+                const navMenu = document.querySelector(".navbar-right"); // Select the nav menu to toggle visibility
+    
+                if (hamburger && navMenu) { // Make sure both elements are found
+                    hamburger.addEventListener("click", function () {
+                        navMenu.classList.toggle("active"); // Toggle active class to show/hide menu
+                    });
+                } else {
+                    console.error("Hamburger menu or navbar not found!");
+                }
+            });
+        </script>
+</body>
+</html>
