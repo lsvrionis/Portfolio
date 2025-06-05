@@ -13,7 +13,7 @@ class PortfolioApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Lily Vrionis Portfolio',
+      title: 'Lily Vrionis',
       home: const PortfolioHome(),
       debugShowCheckedModeBanner: false,
     );
@@ -30,6 +30,7 @@ class PortfolioHome extends StatelessWidget {
         child: Column(
           children: const [
             FirstSection(),
+            IntroSection(),
           ],
         ),
       ),
@@ -43,6 +44,7 @@ class FirstSection extends StatefulWidget {
   @override
   State<FirstSection> createState() => _FirstSectionState();
 }
+
 
 class _FirstSectionState extends State<FirstSection>
     with SingleTickerProviderStateMixin {
@@ -165,25 +167,30 @@ class _FirstSectionState extends State<FirstSection>
                         );
                       }
                     },
-                    child: Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: isHovering
-                            ? const Color(0xFF4B65D4)
-                            : const Color(0xFF5E7CFE),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Text(
-                        "Contact Me",
-                        style: TextStyle(
-                          fontFamily: 'Solway',
-                          fontSize: 24,
-                          color: Color(0xFFF6F2EF),
+                    child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        transform: isHovering
+                            ? Matrix4.translationValues(0, -5, 0)
+                            : Matrix4.translationValues(0, 0, 0),
+                        curve: Curves.easeOut,
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: isHovering
+                              ? const Color(0xFF4B65D4)
+                              : const Color(0xFF5E7CFE),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Text(
+                          "Contact Me",
+                          style: TextStyle(
+                            fontFamily: 'Solway',
+                            fontSize: 24,
+                            color: Color(0xFFF6F2EF),
+                          ),
                         ),
                       ),
-                    ),
+
                   ),
                 ),
               ],
@@ -285,6 +292,340 @@ class _BouncingArrowsState extends State<BouncingArrows>
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class IntroSection extends StatelessWidget {
+  const IntroSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color(0xFFF6F2EF),
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Left side
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Replaced typewriter with static text and longer underline
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      "hello!",
+                      style: TextStyle(
+                        fontSize: 60,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Solway',
+                        color: Color(0xFF5E7CFE),
+                      ),
+                    ),
+                    SizedBox(height: 6),
+                    // Longer underline
+                    SizedBox(
+                      width: 250,
+                      height: 4,
+                      child: ColoredBox(color: Color(0xFF5E7CFE)),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 30),
+                RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                        fontFamily: 'Solway',
+                        fontSize: 25,
+                        color: Colors.black),
+                    children: [
+                      const TextSpan(text: "I’m "),
+                      TextSpan(
+                          text: "Lily",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF5E7CFE))),
+                      const TextSpan(text: ", an Orlando-based "),
+                      TextSpan(
+                          text: "front-end developer",
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(text: " and "),
+                      TextSpan(
+                          text: "UI/UX designer",
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(
+                          text:
+                              ". I’m all about creating designs that are visually appealing, but also impactful and accessible."),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  "Currently, I’m in my undergrad at the University of Central Florida studying information technology and cognitive sciences.",
+                  style: TextStyle(fontFamily: 'Solway', fontSize: 25),
+                ),
+                const SizedBox(height: 24),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    LinkIconRow(
+                      icon: Icons.email,
+                      label: "lsvrionis@gmail.com",
+                      url: "mailto:lsvrionis@gmail.com",
+                    ),
+                    LinkIconRow(
+                      icon: Icons.person,
+                      label: "linkedin.com/in/lily-vrionis",
+                      url: "https://linkedin.com/in/lily-vrionis",
+                    ),
+                    LinkIconRow(
+                      icon: Icons.code,
+                      label: "github.com/lsvrionis",
+                      url: "https://github.com/lsvrionis",
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          const SizedBox(width: 40),
+          // Right side image
+          Expanded(
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    children: [
+      const SizedBox(height: 48), // pushes image down
+      HoverScaleImage(),
+    ],
+  ),
+)
+
+
+        ],
+      ),
+    );
+  }
+}
+
+class TypewriterText extends StatefulWidget {
+  final String text;
+
+  const TypewriterText({super.key, required this.text});
+
+  @override
+  State<TypewriterText> createState() => _TypewriterTextState();
+}
+
+class _TypewriterTextState extends State<TypewriterText> {
+  String _textToShow = '';
+  int _charIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    Timer.periodic(const Duration(milliseconds: 150), (timer) {
+      if (_charIndex < widget.text.length) {
+        setState(() {
+          _textToShow += widget.text[_charIndex];
+          _charIndex++;
+        });
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          _textToShow,
+          style: const TextStyle(
+            fontSize: 60,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Solway',
+            color: Color(0xFF5E7CFE),
+          ),
+        ),
+        const SizedBox(height: 6),
+        Container(
+          width: 180, 
+          height: 4,
+          color: Color(0xFF5E7CFE),
+        ),
+      ],
+    );
+  }
+}
+
+
+class LinkIconRow extends StatefulWidget {
+  final IconData icon;
+  final String label;
+  final String url;
+  
+  const LinkIconRow(
+      {super.key,
+      required this.icon,
+      required this.label,
+      required this.url});
+
+  @override
+  State<LinkIconRow> createState() => _LinkIconRowState();
+}
+
+class _LinkIconRowState extends State<LinkIconRow> {
+  bool isHovered = false;
+  
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => isHovered = true),
+      onExit: (_) => setState(() => isHovered = false),
+      child: GestureDetector(
+        onTap: () => launchUrl(Uri.parse(widget.url)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Row(
+            children: [
+              Container(
+  width: 48, // Increased from just padding
+  height: 48,
+  decoration: const BoxDecoration(
+    shape: BoxShape.circle,
+    color: Color(0xFF5E7CFE),
+  ),
+  child: Icon(widget.icon, color: Color(0xFFF6F2EF), size: 24),
+),
+
+              const SizedBox(width: 20),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final text = TextPainter(
+                    text: TextSpan(
+                      text: widget.label,
+                      style: const TextStyle(fontSize: 25, fontFamily: 'Solway'),
+                    ),
+                    textDirection: TextDirection.ltr,
+                  )..layout();
+
+                  return Stack(
+                    children: [
+                      AnimatedScale(
+                        scale: isHovered ? 1.1 : 1.0,
+                        duration: const Duration(milliseconds: 200),
+                        child: Stack(
+                          children: [
+                            Text(
+                              widget.label,
+                              style: const TextStyle(
+                                fontSize: 25,
+                                fontFamily: 'Solway',
+                                color: Colors.black,
+                              ),
+                            ),
+                            if (isHovered)
+                              Positioned(
+                                top: 32,
+                                bottom: 0,
+                                child: CustomPaint(
+                                  painter: ZigzagPainter(text.width),
+                                  size: Size(text.width, 5),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ZigzagPainter extends CustomPainter {
+  final double width;
+
+  ZigzagPainter(this.width);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+
+    final path = Path();
+    final double zigzagHeight = size.height;
+    for (double x = 0; x <= width; x += 6) {
+      final isEven = (x ~/ 6) % 2 == 0;
+      path.lineTo(x, isEven ? 0 : zigzagHeight);
+    }
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(ZigzagPainter oldDelegate) => oldDelegate.width != width;
+}
+
+class HoverScaleImage extends StatefulWidget {
+  @override
+  _HoverScaleImageState createState() => _HoverScaleImageState();
+}
+
+class _HoverScaleImageState extends State<HoverScaleImage> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        const url = 'https://instagram.com/lsvrionis';
+        if (await canLaunchUrl(Uri.parse(url))) {
+          await launchUrl(Uri.parse(url));
+        }
+      },
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        child: Container(
+          height: 500,
+          decoration: BoxDecoration(
+            border: Border.all(color: Color(0xFF5E7CFE), width: 5),
+          ),
+          padding: const EdgeInsets.all(4),
+          child: AnimatedScale(
+            scale: _isHovered ? 1.05 : 1.0,
+            duration: const Duration(milliseconds: 200),
+            child: Image.asset(
+              'images/Lily.png',
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  color: Colors.grey[300],
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Image not found',
+                    style: TextStyle(fontFamily: 'Solway'),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
       ),
     );
   }

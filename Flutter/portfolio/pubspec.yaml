@@ -23,6 +23,7 @@ flutter:
 
   assets:
     - assets/fonts/
+    - assets/images/Lily.png
 
   fonts:
     - family: Solway
