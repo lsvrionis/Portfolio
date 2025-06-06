@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart'; // For email launching
 import 'dart:async'; // For timers
 import 'dart:math'; // For pi
+import 'sections/experience_section.dart';
+
 
 void main() {
   runApp(const PortfolioApp());
@@ -31,6 +33,7 @@ class PortfolioHome extends StatelessWidget {
           children: const [
             FirstSection(),
             IntroSection(),
+            ExperienceSection(),
           ],
         ),
       ),
@@ -630,3 +633,4 @@ class _HoverScaleImageState extends State<HoverScaleImage> {
     );
   }
 }
+
