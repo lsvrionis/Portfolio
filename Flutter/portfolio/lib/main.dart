@@ -3,7 +3,15 @@ import 'package:url_launcher/url_launcher.dart'; // For email launching
 import 'dart:async'; // For timers
 import 'dart:math'; // For pi
 import 'sections/experience_section.dart';
+import 'sections/skills_section.dart';
+import 'sections/project_section.dart';
+import 'sections/intro_section.dart';
 
+
+final GlobalKey introKey = GlobalKey();
+final GlobalKey experienceKey = GlobalKey();
+final GlobalKey skillsKey = GlobalKey();
+final GlobalKey projectsKey = GlobalKey();
 
 void main() {
   runApp(const PortfolioApp());
@@ -22,19 +30,396 @@ class PortfolioApp extends StatelessWidget {
   }
 }
 
-class PortfolioHome extends StatelessWidget {
+class PortfolioHome extends StatefulWidget {
   const PortfolioHome({super.key});
+
+  @override
+  State<PortfolioHome> createState() => _PortfolioHomeState();
+}
+
+class _PortfolioHomeState extends State<PortfolioHome> {
+  final scrollController = ScrollController();
+  bool _isScrolled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      final isScrolledNow = scrollController.offset > 0;
+      if (isScrolledNow != _isScrolled) {
+        setState(() => _isScrolled = isScrolledNow);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  void scrollTo(GlobalKey key) {
+    final context = key.currentContext;
+    if (context != null) {
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: const [
-            FirstSection(),
-            IntroSection(),
-            ExperienceSection(),
-          ],
+      backgroundColor: const Color(0xFFF6F2EF),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            controller: scrollController,
+            child: Column(
+              children: [
+                const SizedBox(height: 80),
+                const FirstSection(),
+                IntroSection(key: introKey),
+                ExperienceSection(key: experienceKey),
+                const BouncingArrows(),
+                SkillsSection(key: skillsKey),
+                ProjectSection(key: projectsKey),
+                const FooterSection(),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: NavBar(hasShadow: _isScrolled, scrollToSection: scrollTo),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class NavBar extends StatefulWidget {
+  final bool hasShadow;
+  final Function(GlobalKey) scrollToSection;
+
+  const NavBar({super.key, required this.hasShadow, required this.scrollToSection});
+
+  @override
+  State<NavBar> createState() => _NavBarState();
+}
+
+class _NavBarState extends State<NavBar> {
+  bool isContactHover = false;
+  bool isMenuOpen = false;
+
+  // For closing dropdown when clicking outside
+  final LayerLink _layerLink = LayerLink();
+  OverlayEntry? _overlayEntry;
+
+  void _toggleMenu() {
+    if (isMenuOpen) {
+      _closeMenu();
+    } else {
+      _openMenu();
+    }
+  }
+
+void _openMenu() {
+  final overlay = Overlay.of(context);
+  final renderBox = context.findRenderObject() as RenderBox;
+  final size = renderBox.size;
+  final offset = renderBox.localToGlobal(Offset.zero);
+  final screenWidth = MediaQuery.of(context).size.width;
+
+  const menuWidth = 180.0;
+  const sidePadding = 16.0;
+  const extraDownOffset = 12.0;
+
+  double left = offset.dx + size.width - menuWidth;
+if (left + menuWidth > screenWidth - sidePadding) {
+  left = screenWidth - menuWidth - sidePadding;
+}
+if (left < sidePadding) {
+  left = sidePadding;
+}
+
+
+  final top = offset.dy + size.height + 8 + extraDownOffset;
+
+  _overlayEntry = OverlayEntry(
+    builder: (context) => Stack(
+      children: [
+        // Tap anywhere outside to close
+        Positioned.fill(
+          child: GestureDetector(
+            onTap: _closeMenu,
+            behavior: HitTestBehavior.translucent,
+          ),
+        ),
+        Positioned(
+          top: top,
+          left: left,
+          width: menuWidth,
+          child: CompositedTransformFollower(
+            link: _layerLink,
+            showWhenUnlinked: false,
+            offset: const Offset(-127.0, 5.0), // negative X moves it left, positive Y moves it down
+            child: Material(
+              color: const Color(0xFFF6F2EF),
+              elevation: 8,
+              borderRadius: BorderRadius.circular(8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Close "X" button
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: _closeMenu,
+                      tooltip: 'Close menu',
+                    ),
+                  ),
+                  _DropDownItem(
+                    label: 'Experience',
+                    onTap: () {
+                      widget.scrollToSection(experienceKey);
+                      _closeMenu();
+                    },
+                  ),
+                  _DropDownItem(
+                    label: 'Skills',
+                    onTap: () {
+                      widget.scrollToSection(skillsKey);
+                      _closeMenu();
+                    },
+                  ),
+                  _DropDownItem(
+                    label: 'Projects',
+                    onTap: () {
+                      widget.scrollToSection(projectsKey);
+                      _closeMenu();
+                    },
+                  ),
+                  const Divider(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: GestureDetector(
+                      onTap: () {
+                        launchUrl(Uri.parse('mailto:lsvrionis@gmail.com'));
+                        _closeMenu();
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0022B7),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Contact Me',
+                            style: TextStyle(
+                              fontFamily: 'Solway',
+                              fontSize: 20,
+                              color: Color(0xFFF6F2EF),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  overlay.insert(_overlayEntry!);
+  setState(() => isMenuOpen = true);
+}
+
+void _closeMenu() {
+  _overlayEntry?.remove();
+  _overlayEntry = null;
+  setState(() => isMenuOpen = false);
+}
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 800;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF6F2EF),
+        boxShadow: widget.hasShadow
+            ? [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.15),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ]
+            : [],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Left: Lily Vrionis as text link
+          _NavLink(
+            label: 'Lily Vrionis',
+            color: const Color(0xFF0022B7),
+            hoverColor: const Color(0xFF006D5B),
+            onTap: () => widget.scrollToSection(introKey),
+          ),
+
+          // Right: navigation or hamburger
+          if (!isMobile)
+            Row(
+              children: [
+                _NavLink(
+                  label: 'Experience',
+                  color: const Color(0xFF0022B7),
+                  hoverColor: const Color(0xFF006D5B),
+                  onTap: () => widget.scrollToSection(experienceKey),
+                ),
+                const SizedBox(width: 24),
+                _NavLink(
+                  label: 'Skills',
+                  color: const Color(0xFF0022B7),
+                  hoverColor: const Color(0xFF006D5B),
+                  onTap: () => widget.scrollToSection(skillsKey),
+                ),
+                const SizedBox(width: 24),
+                _NavLink(
+                  label: 'Projects',
+                  color: const Color(0xFF0022B7),
+                  hoverColor: const Color(0xFF006D5B),
+                  onTap: () => widget.scrollToSection(projectsKey),
+                ),
+                const SizedBox(width: 24),
+
+                // Contact Me pill-shaped button
+                MouseRegion(
+                  onEnter: (_) => setState(() => isContactHover = true),
+                  onExit: (_) => setState(() => isContactHover = false),
+                  child: GestureDetector(
+                    onTap: () => launchUrl(Uri.parse('mailto:lsvrionis@gmail.com')),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      transform: isContactHover
+                          ? Matrix4.translationValues(0, -3, 0)
+                          : Matrix4.identity(),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: isContactHover
+                            ? const Color(0xFF006D5B)
+                            : const Color(0xFF0022B7),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Text(
+                        'Contact Me',
+                        style: TextStyle(
+                          fontFamily: 'Solway',
+                          fontSize: 22,
+                          color: Color(0xFFF6F2EF),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          else
+            CompositedTransformTarget(
+              link: _layerLink,
+              child: GestureDetector(
+                onTap: _toggleMenu,
+                child: Icon(
+                  isMenuOpen ? Icons.close : Icons.menu,
+                  size: 32,
+                  color: const Color(0xFF0022B7),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+// Dropdown menu item widget used in the hamburger menu dropdown
+class _DropDownItem extends StatefulWidget {
+  final String label;
+  final VoidCallback onTap;
+
+  const _DropDownItem({required this.label, required this.onTap, Key? key}) : super(key: key);
+
+  @override
+  State<_DropDownItem> createState() => _DropDownItemState();
+}
+
+class _DropDownItemState extends State<_DropDownItem> {
+  bool _hover = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hover = true),
+      onExit: (_) => setState(() => _hover = false),
+      child: ListTile(
+        title: Text(
+          widget.label,
+          style: TextStyle(
+            fontFamily: 'Solway',
+            fontSize: 20,
+            color: _hover ? const Color(0xFF006D5B) : const Color(0xFF0022B7),
+          ),
+        ),
+        onTap: widget.onTap,
+      ),
+    );
+  }
+}
+
+class _NavLink extends StatefulWidget {
+  final String label;
+  final Color color;
+  final Color hoverColor;
+  final VoidCallback onTap;
+
+  const _NavLink({required this.label, required this.color, required this.hoverColor, required this.onTap});
+
+  @override
+  State<_NavLink> createState() => _NavLinkState();
+}
+class _NavLinkState extends State<_NavLink> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: Text(
+          widget.label,
+          style: TextStyle(
+            fontFamily: 'Solway',
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            color: _isHovered ? widget.hoverColor : widget.color,
+          ),
         ),
       ),
     );
@@ -48,7 +433,6 @@ class FirstSection extends StatefulWidget {
   State<FirstSection> createState() => _FirstSectionState();
 }
 
-
 class _FirstSectionState extends State<FirstSection>
     with SingleTickerProviderStateMixin {
   bool isHovering = false;
@@ -61,6 +445,7 @@ class _FirstSectionState extends State<FirstSection>
   ];
 
   int currentIndex = 0;
+  final double fontSize = 72;  // Always 72, no mobile scaling down
 
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -84,7 +469,6 @@ class _FirstSectionState extends State<FirstSection>
   }
 
   void _startCycle() {
-    // Start the first flip after 2 seconds
     _visibleTimer = Timer(const Duration(seconds: 2), _startFlip);
   }
 
@@ -96,21 +480,17 @@ class _FirstSectionState extends State<FirstSection>
       _controller.reset();
 
       if (currentIndex < words.length - 1) {
-      // Not yet at the end, continue cycle
-      _visibleTimer = Timer(const Duration(seconds: 1), _startFlip);
-    } else if (currentIndex == words.length - 1) {
-      // Show last word, then flip back to "portfolio."
-      _visibleTimer = Timer(const Duration(seconds: 1), () {
-        _controller.forward(from: 0).whenComplete(() {
-          setState(() {
-            currentIndex = 0; // Back to "portfolio."
+        _visibleTimer = Timer(const Duration(seconds: 1), _startFlip);
+      } else if (currentIndex == words.length - 1) {
+        _visibleTimer = Timer(const Duration(seconds: 1), () {
+          _controller.forward(from: 0).whenComplete(() {
+            setState(() {
+              currentIndex = 0;
+            });
+            _controller.reset();
           });
-          _controller.reset(); // Stop flipping
-          // No more timers. We're done!
         });
       }
-);
-    }
     });
   }
 
@@ -126,114 +506,56 @@ class _FirstSectionState extends State<FirstSection>
     String displayedWord = words[currentIndex % words.length];
     String nextWord = (currentIndex + 1 < words.length)
         ? words[currentIndex + 1]
-        : words[0]; // fallback
+        : words[0];
+
+    final double fontSize = 72;
+
 
     return Container(
       height: MediaQuery.of(context).size.height,
       color: const Color(0xFFF6F2EF),
       child: Column(
         children: [
-          // Top Row with name and Contact Me button
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  "Lily Vrionis",
-                  style: TextStyle(
-                    fontFamily: 'Solway',
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E7CFE),
-                  ),
-                ),
-                MouseRegion(
-                  onEnter: (_) => setState(() => isHovering = true),
-                  onExit: (_) => setState(() => isHovering = false),
-                  child: InkWell(
-                    onTap: () async {
-                      final Uri emailLaunchUri = Uri(
-                        scheme: 'mailto',
-                        path: 'lsvrionis@gmail.com',
-                        query: Uri.encodeFull(
-                            'subject=Hello Lily&body=I loved your portfolio!'),
-                      );
-
-                      if (await canLaunchUrl(emailLaunchUri)) {
-                        await launchUrl(emailLaunchUri);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Could not open email app.')),
-                        );
-                      }
-                    },
-                    child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        transform: isHovering
-                            ? Matrix4.translationValues(0, -5, 0)
-                            : Matrix4.translationValues(0, 0, 0),
-                        curve: Curves.easeOut,
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: isHovering
-                              ? const Color(0xFF4B65D4)
-                              : const Color(0xFF5E7CFE),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Text(
-                          "Contact Me",
-                          style: TextStyle(
-                            fontFamily: 'Solway',
-                            fontSize: 24,
-                            color: Color(0xFFF6F2EF),
-                          ),
-                        ),
-                      ),
-
-                  ),
-                ),
-              ],
-            ),
-          ),
-
+          const SizedBox(height: 0),
           const Spacer(),
-
           Expanded(
-            child: Center(
-              child: AnimatedBuilder(
-                animation: _animation,
-                builder: (context, child) {
-                  final isFirstHalf = _animation.value <= (pi / 2);
-                  final displayText = isFirstHalf ? displayedWord : nextWord;
-                  final rotationY =
-                      isFirstHalf ? _animation.value : _animation.value - pi;
+            child: Transform.translate(
+              offset: const Offset(0, -25),
+              child: Center(
+                child: AnimatedBuilder(
+                  animation: _animation,
+                  builder: (context, child) {
+                    final isFirstHalf = _animation.value <= (pi / 2);
+                    final displayText = isFirstHalf ? displayedWord : nextWord;
+                    final rotationY =
+                        isFirstHalf ? _animation.value : _animation.value - pi;
 
-                  return Transform(
-                    alignment: Alignment.center,
-                    transform: Matrix4.identity()
-                      ..setEntry(3, 2, 0.001)
-                      ..rotateY(rotationY),
-                    child: Text(
-                      displayText,
-                      style: const TextStyle(
-                        fontFamily: 'Solway',
-                        fontSize: 72,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E7CFE),
+                    return Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.identity()
+                        ..setEntry(3, 2, 0.001)
+                        ..rotateY(rotationY),
+                      child: Text(
+                        displayText,
+                        style: TextStyle(
+    fontFamily: 'Solway',
+    fontWeight: FontWeight.w800,
+    fontSize: fontSize,
+    height: 1,
+    color: const Color(0xFF0022B7),
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ),
-
           const Spacer(),
-          const BouncingArrows(),
+          Transform.translate(
+            offset: const Offset(0, -55),
+            child: const BouncingArrows(),
+          ),
         ],
       ),
     );
@@ -248,50 +570,176 @@ class BouncingArrows extends StatefulWidget {
 }
 
 class _BouncingArrowsState extends State<BouncingArrows>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _bounce;
+    with TickerProviderStateMixin {
+  late final AnimationController _controller1;
+  late final AnimationController _controller2;
+  late final AnimationController _controller3;
+
+  late final Animation<double> _animation1;
+  late final Animation<double> _animation2;
+  late final Animation<double> _animation3;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
+
+    _controller1 = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
     )..repeat(reverse: true);
 
-    _bounce = Tween<double>(begin: 0, end: 8).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    _controller2 = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
     );
+
+    _controller3 = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+
+    _animation1 = Tween<double>(begin: 0, end: 8).animate(
+      CurvedAnimation(parent: _controller1, curve: Curves.easeInOut),
+    );
+
+    _animation2 = Tween<double>(begin: 0, end: 8).animate(
+      CurvedAnimation(parent: _controller2, curve: Curves.easeInOut),
+    );
+
+    _animation3 = Tween<double>(begin: 0, end: 8).animate(
+      CurvedAnimation(parent: _controller3, curve: Curves.easeInOut),
+    );
+
+    // Start staggered animations with delays
+    Future.delayed(const Duration(milliseconds: 200), () {
+      _controller2.repeat(reverse: true);
+    });
+
+    Future.delayed(const Duration(milliseconds: 400), () {
+      _controller3.repeat(reverse: true);
+    });
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller1.dispose();
+    _controller2.dispose();
+    _controller3.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      color: const Color(0xFFF6F2EF),
       padding: const EdgeInsets.only(bottom: 32),
-      child: AnimatedBuilder(
-        animation: _bounce,
-        builder: (context, child) {
-          return Transform.translate(
-            offset: Offset(0, _bounce.value),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(Icons.keyboard_arrow_down,
-                    color: Color(0xFF5E7CFE), size: 45),
-                SizedBox(width: 50),
-                Icon(Icons.keyboard_arrow_down,
-                    color: Color(0xFF5E7CFE), size: 45),
-                SizedBox(width: 50),
-                Icon(Icons.keyboard_arrow_down,
-                    color: Color(0xFF5E7CFE), size: 45),
-              ],
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AnimatedBuilder(
+            animation: _animation1,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(0, _animation1.value),
+                child: child,
+              );
+            },
+            child: const Icon(Icons.keyboard_arrow_down,
+                color: Color(0xFF006D5B), size: 45),
+          ),
+          const SizedBox(width: 50),
+          AnimatedBuilder(
+            animation: _animation2,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(0, _animation2.value),
+                child: child,
+              );
+            },
+            child: const Icon(Icons.keyboard_arrow_down,
+                color: Color(0xFF006D5B), size: 45),
+          ),
+          const SizedBox(width: 50),
+          AnimatedBuilder(
+            animation: _animation3,
+            builder: (context, child) {
+              return Transform.translate(                
+                offset: Offset(0, _animation3.value),
+                child: child,
+              );
+            },
+            child: const Icon(Icons.keyboard_arrow_down,
+                color: Color(0xFF006D5B), size: 45),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// --- FooterSection --- 
+
+class FooterSection extends StatelessWidget {
+  const FooterSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final links = [
+      _FooterLink(label: 'resume', url: 'https://drive.google.com/file/d/152A3JnKG62VKzUUMxlQEdcaNZ_5erlrC/view?usp=sharing'),
+      _FooterLink(label: 'github', url: 'https://github.com/lsvrionis'),
+      _FooterLink(label: 'email', url: 'mailto:lsvrionis@gmail.com'),
+      _FooterLink(label: 'linkedin', url: 'https://linkedin.com/in/lily-vrionis'),
+    ];
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 700;
+
+    // Responsive font size
+    double fontSize;
+    if (screenWidth < 400) {
+      fontSize = 12;
+    } else if (screenWidth < 600) {
+      fontSize = 16;
+    } else {
+      fontSize = 20;
+    }
+
+    List<Widget> linkWidgets = [];
+    for (int i = 0; i < links.length; i++) {
+      linkWidgets.add(_FooterLinkWidget(link: links[i], fontSize: fontSize));
+      if (i < links.length - 1) {
+        linkWidgets.add(Padding(
+          padding: EdgeInsets.symmetric(horizontal: fontSize * 0.6),
+          child: Text(
+            '•',
+            style: TextStyle(
+              fontSize: fontSize,
+              color: const Color(0xFFF6F2EF),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ));
+      }
+    }
+
+    return Container(
+      width: double.infinity,
+      color: const Color(0xFF0022B7),
+      padding: EdgeInsets.symmetric(horizontal: 32, vertical: fontSize * 1.2),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Container(
+              // For desktop, expand container width to full width for right align
+              // For mobile, width is min needed (shrink wrap)
+              width: isMobile ? null : constraints.maxWidth,
+              alignment: isMobile ? Alignment.center : Alignment.centerRight,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: linkWidgets,
+              ),
             ),
           );
         },
@@ -300,337 +748,61 @@ class _BouncingArrowsState extends State<BouncingArrows>
   }
 }
 
-class IntroSection extends StatelessWidget {
-  const IntroSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xFFF6F2EF),
-      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Left side
-          Expanded(
-            flex: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Replaced typewriter with static text and longer underline
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      "hello!",
-                      style: TextStyle(
-                        fontSize: 60,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Solway',
-                        color: Color(0xFF5E7CFE),
-                      ),
-                    ),
-                    SizedBox(height: 6),
-                    // Longer underline
-                    SizedBox(
-                      width: 250,
-                      height: 4,
-                      child: ColoredBox(color: Color(0xFF5E7CFE)),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                RichText(
-                  text: TextSpan(
-                    style: const TextStyle(
-                        fontFamily: 'Solway',
-                        fontSize: 25,
-                        color: Colors.black),
-                    children: [
-                      const TextSpan(text: "I’m "),
-                      TextSpan(
-                          text: "Lily",
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF5E7CFE))),
-                      const TextSpan(text: ", an Orlando-based "),
-                      TextSpan(
-                          text: "front-end developer",
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                      const TextSpan(text: " and "),
-                      TextSpan(
-                          text: "UI/UX designer",
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                      const TextSpan(
-                          text:
-                              ". I’m all about creating designs that are visually appealing, but also impactful and accessible."),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  "Currently, I’m in my undergrad at the University of Central Florida studying information technology and cognitive sciences.",
-                  style: TextStyle(fontFamily: 'Solway', fontSize: 25),
-                ),
-                const SizedBox(height: 24),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    LinkIconRow(
-                      icon: Icons.email,
-                      label: "lsvrionis@gmail.com",
-                      url: "mailto:lsvrionis@gmail.com",
-                    ),
-                    LinkIconRow(
-                      icon: Icons.person,
-                      label: "linkedin.com/in/lily-vrionis",
-                      url: "https://linkedin.com/in/lily-vrionis",
-                    ),
-                    LinkIconRow(
-                      icon: Icons.code,
-                      label: "github.com/lsvrionis",
-                      url: "https://github.com/lsvrionis",
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-          const SizedBox(width: 40),
-          // Right side image
-          Expanded(
-  child: Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    children: [
-      const SizedBox(height: 48), // pushes image down
-      HoverScaleImage(),
-    ],
-  ),
-)
-
-
-        ],
-      ),
-    );
-  }
-}
-
-class TypewriterText extends StatefulWidget {
-  final String text;
-
-  const TypewriterText({super.key, required this.text});
-
-  @override
-  State<TypewriterText> createState() => _TypewriterTextState();
-}
-
-class _TypewriterTextState extends State<TypewriterText> {
-  String _textToShow = '';
-  int _charIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    Timer.periodic(const Duration(milliseconds: 150), (timer) {
-      if (_charIndex < widget.text.length) {
-        setState(() {
-          _textToShow += widget.text[_charIndex];
-          _charIndex++;
-        });
-      } else {
-        timer.cancel();
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          _textToShow,
-          style: const TextStyle(
-            fontSize: 60,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Solway',
-            color: Color(0xFF5E7CFE),
-          ),
-        ),
-        const SizedBox(height: 6),
-        Container(
-          width: 180, 
-          height: 4,
-          color: Color(0xFF5E7CFE),
-        ),
-      ],
-    );
-  }
-}
-
-
-class LinkIconRow extends StatefulWidget {
-  final IconData icon;
+class _FooterLink {
   final String label;
   final String url;
-  
-  const LinkIconRow(
-      {super.key,
-      required this.icon,
-      required this.label,
-      required this.url});
-
-  @override
-  State<LinkIconRow> createState() => _LinkIconRowState();
+  const _FooterLink({required this.label, required this.url});
 }
 
-class _LinkIconRowState extends State<LinkIconRow> {
-  bool isHovered = false;
-  
+class _FooterLinkWidget extends StatefulWidget {
+  final _FooterLink link;
+  final double fontSize;
+
+  const _FooterLinkWidget({required this.link, required this.fontSize, super.key});
+
   @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => isHovered = true),
-      onExit: (_) => setState(() => isHovered = false),
-      child: GestureDetector(
-        onTap: () => launchUrl(Uri.parse(widget.url)),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            children: [
-              Container(
-  width: 48, // Increased from just padding
-  height: 48,
-  decoration: const BoxDecoration(
-    shape: BoxShape.circle,
-    color: Color(0xFF5E7CFE),
-  ),
-  child: Icon(widget.icon, color: Color(0xFFF6F2EF), size: 24),
-),
-
-              const SizedBox(width: 20),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final text = TextPainter(
-                    text: TextSpan(
-                      text: widget.label,
-                      style: const TextStyle(fontSize: 25, fontFamily: 'Solway'),
-                    ),
-                    textDirection: TextDirection.ltr,
-                  )..layout();
-
-                  return Stack(
-                    children: [
-                      AnimatedScale(
-                        scale: isHovered ? 1.1 : 1.0,
-                        duration: const Duration(milliseconds: 200),
-                        child: Stack(
-                          children: [
-                            Text(
-                              widget.label,
-                              style: const TextStyle(
-                                fontSize: 25,
-                                fontFamily: 'Solway',
-                                color: Colors.black,
-                              ),
-                            ),
-                            if (isHovered)
-                              Positioned(
-                                top: 32,
-                                bottom: 0,
-                                child: CustomPaint(
-                                  painter: ZigzagPainter(text.width),
-                                  size: Size(text.width, 5),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  State<_FooterLinkWidget> createState() => _FooterLinkWidgetState();
 }
 
-class ZigzagPainter extends CustomPainter {
-  final double width;
-
-  ZigzagPainter(this.width);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.black
-      ..strokeWidth = 2
-      ..style = PaintingStyle.stroke;
-
-    final path = Path();
-    final double zigzagHeight = size.height;
-    for (double x = 0; x <= width; x += 6) {
-      final isEven = (x ~/ 6) % 2 == 0;
-      path.lineTo(x, isEven ? 0 : zigzagHeight);
-    }
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(ZigzagPainter oldDelegate) => oldDelegate.width != width;
-}
-
-class HoverScaleImage extends StatefulWidget {
-  @override
-  _HoverScaleImageState createState() => _HoverScaleImageState();
-}
-
-class _HoverScaleImageState extends State<HoverScaleImage> {
+class _FooterLinkWidgetState extends State<_FooterLinkWidget> {
   bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        const url = 'https://instagram.com/lsvrionis';
-        if (await canLaunchUrl(Uri.parse(url))) {
-          await launchUrl(Uri.parse(url));
-        }
-      },
-      child: MouseRegion(
-        onEnter: (_) => setState(() => _isHovered = true),
-        onExit: (_) => setState(() => _isHovered = false),
-        child: Container(
-          height: 500,
-          decoration: BoxDecoration(
-            border: Border.all(color: Color(0xFF5E7CFE), width: 5),
-          ),
-          padding: const EdgeInsets.all(4),
-          child: AnimatedScale(
-            scale: _isHovered ? 1.05 : 1.0,
-            duration: const Duration(milliseconds: 200),
-            child: Image.asset(
-              'images/Lily.png',
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  color: Colors.grey[300],
-                  alignment: Alignment.center,
-                  child: const Text(
-                    'Image not found',
-                    style: TextStyle(fontFamily: 'Solway'),
-                  ),
-                );
-              },
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: () async {
+          final uri = Uri.parse(widget.link.url);
+          if (await canLaunchUrl(uri)) {
+            await launchUrl(uri);
+          }
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              widget.link.label,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontFamily: 'Solway',
+                fontSize: widget.fontSize,
+                color: const Color(0xFFF6F2EF),
+              ),
             ),
-          ),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              margin: const EdgeInsets.only(top: 4),
+              height: 2,
+              width: _isHovered ? 2 * widget.fontSize : 0,
+              decoration: const BoxDecoration(
+                color: Color(0xFFF6F2EF),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
-

@@ -24,6 +24,7 @@ flutter:
   assets:
     - assets/fonts/
     - assets/images/Lily.png
+    - assets/resume.pdf
 
   fonts:
     - family: Solway
